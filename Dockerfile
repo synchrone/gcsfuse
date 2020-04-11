@@ -15,4 +15,8 @@ CMD userdel $(getent passwd | grep x:$UID | cut -d: -f1); \
     groupdel $(getent group | grep x:$GID | cut -d: -f1); \
     groupmod -g $GID fuse && \
     chown fuse:fuse /mnt && \
-    su -p -c "HOME=/home/fuse gcsfuse --foreground $BUCKET $MOUNT" fuse
+    su -p -c "HOME=/home/fuse gcsfuse --foreground -o nonempty $BUCKET $MOUNT" fuse
+
+#docker run -it --rm --device /dev/fuse --cap-add SYS_ADMIN --security-opt apparmor:unconfined \
+#  -v ~/.config/gcloud/application_default_credentials.json:/home/fuse/.config/gcloud/application_default_credentials.json \
+#   gcsfuse:latest
